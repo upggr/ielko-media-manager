@@ -3,7 +3,7 @@ wp-tvchannel
 IELKO WP MEDIA MANAGER
 
 Purpose of this plugin :
-
+ 
 Manage remote or local media from a wordpress installation and provide xml feeds. Also currently a roku and tvos app is generated using a third party open source project automatically from the same interface.
 
 Installation instructions :
