@@ -11,6 +11,11 @@ License: Commercial
 
 /* You can steal this, but note that the client generators are in a different server and have lot more proprietary code than here :p  */
 
+require_once('ielko-updater.php');
+if (is_admin()) {
+    new IelkoUpdater(__FILE__, 'upggr', "ielko-media-manager");
+}
+
 function ielko_wp_media_manager()
 {
     $labels = array(
