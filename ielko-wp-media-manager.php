@@ -572,12 +572,13 @@ function ionic_f_dev()
         $themainarray['categories'][] = $cat_array;
     }
 
-    query_posts("posts_per_page=1000&post_type=media_item");
+    query_posts("posts_per_page=1000&post_type=media_item&orderby=date&order=ASC");
     if (have_posts()) :  while (have_posts()) : the_post();
     $thetitle = get_the_title();
     $theurl = get_post_meta(get_the_ID(), 'media_url', true);
     $thedescription = get_post_meta(get_the_ID(), 'media_description', true);
-    $thecategory = get_the_category();
+    $category = get_the_category();
+    $thecategory = $category[0]->cat_name;
     $theimg =  wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'single-post-thumbnail');
     $theimg =  $theimg[0];
 
