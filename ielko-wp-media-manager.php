@@ -3,7 +3,7 @@
 Plugin Name: Ielko WP Media Manager
 Plugin URI: http://ielko.com/support/ielko-wp-media-manager/
 Description: Media manager for roku and tvOS clients
-Version: 1.4
+Version: 1.5
 Author: Ioannis Kokkinis
 Author URI: http://ielko.com
 License: Commercial
