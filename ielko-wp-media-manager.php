@@ -439,7 +439,7 @@ function ionic_dev()
 }
 
 
-function ionic_f()
+function ionic_f_bkp()
 {
     $postCount = 1000;
     $posts = query_posts('showposts=' . $postCount);
@@ -501,7 +501,7 @@ function ionic_f()
                     $theimg = get_site_url().'/?feed=gen_img&wi=800&orig=&he=450&fontsize=30&txt='.$thetitle_.'.png';
                 } else {
                     $thevideo = explode("=", $theurl);
-                    $theimg = "https://img.youtube.com/vi/".$thevideo[1]."/1.jpg";
+                    $theimg = "https://img.youtube.com/vi/".$thevideo[1]."/hqdefault.jpg";
                 }
             }
             if (!$thedescription) {
@@ -539,7 +539,7 @@ function ionic_f()
     echo $json_resp;
 }
 
-function ionic_f_dev()
+function ionic_f()
 {
     $postCount = 1000;
     $posts = query_posts('showposts=' . $postCount);
@@ -611,7 +611,7 @@ function ionic_f_dev()
                 $theimg = get_site_url().'/?feed=gen_img&wi=800&orig=&he=450&fontsize=30&txt='.$thetitle_.'.png';
             } else {
                 $thevideo = explode("=", $theurl);
-                $theimg = "https://img.youtube.com/vi/".$thevideo[1]."/1.jpg";
+                $theimg = "https://img.youtube.com/vi/".$thevideo[1]."/hqdefault.jpg";
             }
         }
         if (!$thedescription) {
