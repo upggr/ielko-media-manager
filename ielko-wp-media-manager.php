@@ -573,12 +573,11 @@ function ionic_f_dev()
     }
 
     query_posts("posts_per_page=1000&post_type=media_item");
-    if (have_posts()) :
-                                while (have_posts()) : the_post();
+    if (have_posts()) :  while (have_posts()) : the_post();
     $thetitle = get_the_title();
     $theurl = get_post_meta(get_the_ID(), 'media_url', true);
     $thedescription = get_post_meta(get_the_ID(), 'media_description', true);
-
+    $thecategory = get_the_category();
     $theimg =  wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'single-post-thumbnail');
     $theimg =  $theimg[0];
 
@@ -644,11 +643,11 @@ function ionic_f_dev()
     endif;
 
     //	 echo '<pre>';
-    print_r($themainarray);
+    //  print_r($themainarray);
     //	 echo '</pre>';
 
-    //$json_resp = json_encode($themainarray);
-    //			 echo $json_resp;
+    $json_resp = json_encode($themainarray);
+    echo $json_resp;
 }
 
 function rokuDP_f()
