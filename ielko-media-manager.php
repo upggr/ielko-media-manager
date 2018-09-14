@@ -1,15 +1,13 @@
 <?php
 /*
-Plugin Name: Ielko WP Media Manager
-Plugin URI: http://ielko.com/support/ielko-wp-media-manager/
-Description: Media manager for roku and tvOS clients
-Version: 1.4
+Plugin Name: Ielko Media Manager
+Plugin URI: https://github.com/upggr/ielko-media-manager/releases/latest
+Description: Media manager for Roku, tvOS, iOS, android, windows, ionic, osx clients
+Version: 0.1
 Author: Ioannis Kokkinis
 Author URI: http://ielko.com
 License: Commercial
 */
-
-/* You can steal this, but note that the client generators are in a different server and have lot more proprietary code than here :p  */
 
 
 require_once('ielko-updater.php');
