@@ -1093,7 +1093,7 @@ function inject_res($filename, $injector1, $injector2)
 function ivc_add_admin_menu()
 {
     add_submenu_page('edit.php?post_type=media_item', __('Input', 'menu-test'), __('Input', 'menu-test'), 'manage_options', 'ielko_wp_media_manager', 'ivc_options_page');
-    add_submenu_page('edit.php?post_type=media_item', __('Output', 'menu-test2'), __('Output', 'menu-test2'), 'manage_options', 'ielko_wp_media_manager', 'ivc_output');
+    //  add_submenu_page('edit.php?post_type=media_item', __('Output', 'menu-test2'), __('Output', 'menu-test2'), 'manage_options', 'ielko_wp_media_manager', 'ivc_output');
 }
 
 
