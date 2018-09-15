@@ -3,7 +3,7 @@
 Plugin Name: Ielko Media Manager
 Plugin URI: https://github.com/upggr/ielko-media-manager/releases/latest
 Description: Media manager for Roku, tvOS, iOS, android, windows, ionic, osx clients
-Version: 0.1.5
+Version: 0.1.6
 Author: Ioannis Kokkinis
 Author URI: http://ielko.com
 License: Commercial
@@ -1299,9 +1299,7 @@ function ivc_image_field_5_render()
 function ivc_settings_section_intro()
 {
     $options = get_option('ivc_settings');
-    echo __('<form action="options.php" method="post">
-    		<h2>Instructions and basic settings</h2>
-        Thank you for installing the IELKO plugin.
+    echo __('Thank you for installing the IELKO plugin.
   <br />
 	  <br />
 		<p>
@@ -1365,10 +1363,18 @@ function ivc_settings_section_intro()
 //</form>
 function ivc_options_page()
 {
-    settings_fields('pluginPage');
+    ?>
+	<form action='options.php' method='post'>
+
+		<h2>Instructions and basic settings</h2>
+
+		<?php
+        settings_fields('pluginPage');
     do_settings_sections('pluginPage');
-    submit_button();
-    echo '</form>';
+    submit_button(); ?>
+
+	</form>
+	<?php
 }
 
 
