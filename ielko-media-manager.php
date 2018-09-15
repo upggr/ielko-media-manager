@@ -1069,9 +1069,11 @@ if (! class_exists('WC_CPInstallCheck')) {
     {
         public static function install()
         {
-            if (!in_array('categories-images/categories-images.php', apply_filters('active_plugins', get_option('active_plugins')))) {
+            if (!in_array('categories-images/categories-images.php', apply_filters('active_plugins', get_option('active_plugins')))
+            ||
+                    !in_array('wp-cors/wp-cors.php', apply_filters('active_plugins', get_option('active_plugins')))) {
                 deactivate_plugins(__FILE__);
-                $error_message = __('This plugin requires <a target="_blank" href="https://wordpress.org/plugins/categories-images/">Categories Images</a> &amp; plugin to be active! Install it, activate it and come back here :) ', 'categories-images');
+                $error_message = __('This plugin requires <a target="_blank" href="https://wordpress.org/plugins/categories-images/">Categories Images</a> and <a target="_blank" href="https://wordpress.org/plugins/wp-cors/">WP Cors</a> &amp; plugins to be active! Install them, activate them and come back here :) ', 'categories-images');
                 die($error_message);
             }
         }
