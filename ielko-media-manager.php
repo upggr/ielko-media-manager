@@ -3,7 +3,7 @@
 Plugin Name: Ielko Media Manager
 Plugin URI: https://github.com/upggr/ielko-media-manager/releases/latest
 Description: Media manager for Roku, tvOS, iOS, android, windows, ionic, osx clients
-Version: 0.1.8
+Version: 0.1.9
 Author: Ioannis Kokkinis
 Author URI: http://ielko.com
 License: Commercial
@@ -1093,8 +1093,7 @@ function inject_res($filename, $injector1, $injector2)
 function ivc_add_admin_menu()
 {
     add_submenu_page('edit.php?post_type=media_item', __('Input', 'menu-test'), __('Input', 'menu-test'), 'manage_options', 'ielko_wp_media_manager', 'ivc_options_page');
-    add_submenu_page('edit.php?post_type=media_item', __('Output', 'menu-test'), __('Output', 'menu-test'), 'manage_options', 'ielko_wp_media_manager', 'ivc_output');
-    //add_menu_page( 'Ielko Settings', 'Ielko Settings', 'manage_options', 'ielko_wp_media_manager', 'ivc_options_page' );
+    add_submenu_page('edit.php?post_type=media_item', __('Output', 'menu-test2'), __('Output', 'menu-test2'), 'manage_options', 'ielko_wp_media_manager', 'ivc_output');
 }
 
 
@@ -1313,18 +1312,12 @@ function ivc_options_page()
 
 function ivc_output()
 {
-    ?>
-	<form action='options.php' method='post'>
+    echo  '<h2>Output</h2>';
 
-		<h2>Instructions and basic settings</h2>
 
-		<?php
     settings_fields('pluginPage');
     do_settings_sections('pluginPage');
-    submit_button(); ?>
-
-	</form>
-	<?php
+    submit_button();
 }
 
 
