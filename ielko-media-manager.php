@@ -1110,7 +1110,7 @@ function ivc_settings_init()
 
     add_settings_field(
     'ivc_text_field_1',
-    __('Name your Application (ROKU & TVOS)', 'wordpress'),
+    __('Application Name', 'wordpress'),
     'ivc_text_field_1_render',
     'pluginPage',
     'ivc_pluginPage_section'
@@ -1118,7 +1118,7 @@ function ivc_settings_init()
 
     add_settings_field(
     'ivc_text_field_2',
-    __('Subtitle/slogan (ROKU)', 'wordpress'),
+    __('Application Slogan', 'wordpress'),
     'ivc_text_field_2_render',
     'pluginPage',
     'ivc_pluginPage_section'
@@ -1126,45 +1126,23 @@ function ivc_settings_init()
 
     add_settings_field(
         'ivc_image_field_0',
-        __('ROKU Icon (336 x 210)', 'wordpress'),
+        __('icon (1024x1024)', 'wordpress'),
         'ivc_image_field_0_render',
         'pluginPage',
         'ivc_pluginPage_section'
     );
-    add_settings_field(
-    'ivc_image_field_1',
-    __('ROKU Side (108 x 69)', 'wordpress'),
-    'ivc_image_field_1_render',
-    'pluginPage',
-    'ivc_pluginPage_section'
-);
-    add_settings_field(
-'ivc_image_field_2',
-__('ROKU Overhang (234 x 104)', 'wordpress'),
-'ivc_image_field_2_render',
-'pluginPage',
-'ivc_pluginPage_section'
-);
 
     add_settings_field(
-        'ivc_image_field_3',
-        __('ROKU Splash (1280 x 720)', 'wordpress'),
-        'ivc_image_field_3_render',
-        'pluginPage',
-        'ivc_pluginPage_section'
-    );
-
-    add_settings_field(
-        'ivc_image_field_4',
-        __('ROKU store (540 x 405)', 'wordpress'),
-        'ivc_image_field_4_render',
+        'ivc_image_field_1',
+        __('splash (2732x2732 centered)', 'wordpress'),
+        'ivc_image_field_1_render',
         'pluginPage',
         'ivc_pluginPage_section'
     );
 
     add_settings_field(
         'ivc_image_field_5',
-        __('ROKU default placeholder image (800 x 450)', 'wordpress'),
+        __('default image placeholder (800x450)', 'wordpress'),
         'ivc_image_field_5_render',
         'pluginPage',
         'ivc_pluginPage_section'
@@ -1172,16 +1150,8 @@ __('ROKU Overhang (234 x 104)', 'wordpress'),
 
     add_settings_field(
         'ivc_checkbox_field_0',
-        __('Enable media checker (BETA) - Will check every 10 minutes for dead media and mark them as inactive', 'wordpress'),
+        __('test checkbox', 'wordpress'),
         'ivc_checkbox_field_0_render',
-        'pluginPage',
-        'ivc_pluginPage_section'
-    );
-
-    add_settings_field(
-        'ivc_checkbox_field_1',
-        __('Enable mediarazzi Ad network on your videos (BETA)', 'wordpress'),
-        'ivc_checkbox_field_1_render',
         'pluginPage',
         'ivc_pluginPage_section'
     );
@@ -1264,29 +1234,7 @@ function ivc_image_field_1_render()
 	<?php
 }
 
-function ivc_image_field_2_render()
-{
-    $options = get_option('ivc_settings'); ?>
-	 <input type="text" name="ivc_settings[ivc_image_field_2]" id="image_url2" class="regular-text" value="<?php echo $options['ivc_image_field_2']; ?>">
-	 <input type="button" name="upload-btn2" id="upload-btn2" class="button-secondary" value="Upload Image">
-	<?php
-}
 
-function ivc_image_field_3_render()
-{
-    $options = get_option('ivc_settings'); ?>
-	 <input type="text" name="ivc_settings[ivc_image_field_3]" id="image_url3" class="regular-text" value="<?php echo $options['ivc_image_field_3']; ?>">
-	 <input type="button" name="upload-btn3" id="upload-btn3" class="button-secondary" value="Upload Image">
-	<?php
-}
-
-function ivc_image_field_4_render()
-{
-    $options = get_option('ivc_settings'); ?>
-	 <input type="text" name="ivc_settings[ivc_image_field_4]" id="image_url4" class="regular-text" value="<?php echo $options['ivc_image_field_4']; ?>">
-	 <input type="button" name="upload-btn4" id="upload-btn4" class="button-secondary" value="Upload Image">
-	<?php
-}
 
 function ivc_image_field_5_render()
 {
@@ -1318,14 +1266,7 @@ function ivc_settings_section_intro()
 				mm_icon_focus_sd="'.$options['ivc_image_field_0'].'"
 				mm_icon_side_hd="'.$options['ivc_image_field_1'].'"
 				mm_icon_side_sd="'.$options['ivc_image_field_1'].'"
-				overhang_hd="'.$options['ivc_image_field_2'].'"
-				overhang_sd="'.$options['ivc_image_field_2'].'"
-				splash_screen_sd="'.$options['ivc_image_field_3'].'"
-				splash_screen_hd="'.$options['ivc_image_field_3'].'"
-				splash_screen_fhd="'.$options['ivc_image_field_3'].'"
-				store_fhd="'.$options['ivc_image_field_4'].'"
-				store_hd="'.$options['ivc_image_field_4'].'"
-				store_sd="'.$options['ivc_image_field_4'].'"
+
 				>Download your ROKU app by clicking here  (Watch out for your popup blocker)</span>.
 				<br />
 				<br />
@@ -1333,14 +1274,6 @@ function ivc_settings_section_intro()
 					mm_icon_focus_sd="'.$options['ivc_image_field_0'].'"
 					mm_icon_side_hd="'.$options['ivc_image_field_1'].'"
 					mm_icon_side_sd="'.$options['ivc_image_field_1'].'"
-					overhang_hd="'.$options['ivc_image_field_2'].'"
-					overhang_sd="'.$options['ivc_image_field_2'].'"
-					splash_screen_sd="'.$options['ivc_image_field_3'].'"
-					splash_screen_hd="'.$options['ivc_image_field_3'].'"
-					splash_screen_fhd="'.$options['ivc_image_field_3'].'"
-					store_fhd="'.$options['ivc_image_field_4'].'"
-					store_hd="'.$options['ivc_image_field_4'].'"
-					store_sd="'.$options['ivc_image_field_4'].'"
 					>Download your TVOS app by clicking here  (Watch out for your popup blocker)</span>.
 					<br />
 					<br />
