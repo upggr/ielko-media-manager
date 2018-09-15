@@ -1134,7 +1134,7 @@ function ivc_settings_init()
 
     add_settings_field(
         'ivc_image_field_1',
-        __('splash (2732x2732 centered)', 'wordpress'),
+        __('splash (2732x2732)', 'wordpress'),
         'ivc_image_field_1_render',
         'pluginPage',
         'ivc_pluginPage_section'
