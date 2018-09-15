@@ -15,6 +15,24 @@ if (is_admin()) {
     new IelkoUpdater(__FILE__, 'upggr', "ielko-media-manager");
 }
 
+if (! class_exists('WC_CPInstallCheck')) {
+    class WC_CPInstallCheck
+    {
+        public static function install()
+        {
+            if (!in_array('categories-images/categories-images.php', apply_filters('active_plugins', get_option('active_plugins')))
+            ||
+                    !in_array('wp-cors/wp-cors.php', apply_filters('active_plugins', get_option('active_plugins')))) {
+                deactivate_plugins(__FILE__);
+                $error_message = __('This plugin requires <a target="_blank" href="https://wordpress.org/plugins/categories-images/">Categories Images</a> and <a target="_blank" href="https://wordpress.org/plugins/wp-cors/">WP Cors</a> &amp; plugins to be active! Install them, activate them and come back here :) ', 'categories-images');
+                die($error_message);
+            }
+        }
+    }
+}
+register_activation_hook(__FILE__, array('WC_CPInstallCheck', 'install'));
+
+
 function ielko_wp_media_manager()
 {
     $labels = array(
@@ -67,6 +85,9 @@ function ielko_wp_media_manager()
     );
     register_post_type('media_item', $args);
 }
+
+
+
 
 function replace_featured_image_box()
 {
@@ -1064,22 +1085,7 @@ function inject_res($filename, $injector1, $injector2)
 
 
 
-if (! class_exists('WC_CPInstallCheck')) {
-    class WC_CPInstallCheck
-    {
-        public static function install()
-        {
-            if (!in_array('categories-images/categories-images.php', apply_filters('active_plugins', get_option('active_plugins')))
-            ||
-                    !in_array('wp-cors/wp-cors.php', apply_filters('active_plugins', get_option('active_plugins')))) {
-                deactivate_plugins(__FILE__);
-                $error_message = __('This plugin requires <a target="_blank" href="https://wordpress.org/plugins/categories-images/">Categories Images</a> and <a target="_blank" href="https://wordpress.org/plugins/wp-cors/">WP Cors</a> &amp; plugins to be active! Install them, activate them and come back here :) ', 'categories-images');
-                die($error_message);
-            }
-        }
-    }
-}
-register_activation_hook(__FILE__, array('WC_CPInstallCheck', 'install'));
+
 
 
 
@@ -1293,7 +1299,9 @@ function ivc_image_field_5_render()
 function ivc_settings_section_intro()
 {
     $options = get_option('ivc_settings');
-    echo __('Thank you for installing the IELKO plugin.
+    echo __('<form action="options.php" method="post">
+    		<h2>Instructions and basic settings</h2>
+        Thank you for installing the IELKO plugin.
   <br />
 	  <br />
 		<p>
@@ -1357,18 +1365,10 @@ function ivc_settings_section_intro()
 //</form>
 function ivc_options_page()
 {
-    ?>
-	<form action='options.php' method='post'>
-
-		<h2>Instructions and basic settings</h2>
-
-		<?php
-        settings_fields('pluginPage');
+    settings_fields('pluginPage');
     do_settings_sections('pluginPage');
-    submit_button(); ?>
-
-	</form>
-	<?php
+    submit_button();
+    echo '</form>';
 }
 
 
