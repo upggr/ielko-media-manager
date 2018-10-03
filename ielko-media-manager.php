@@ -879,7 +879,7 @@ function tvosXMLFunc()
         $thecategory = $cat->name;
         $thecategorydesc = $cat->description;
         if ($thecategory != 'Uncategorized') {
-            if ($thecategory == 'Live') {
+            if ($thecategory == 'Live' || $thecategory == 'Replay') {
                 query_posts("cat=$thecatid&posts_per_page=100&post_type='media_item");
 
                 echo '<section><listItemLockup><title>'.$thecategory.'</title><decorationLabel>'.$thecategorydesc.'</decorationLabel><relatedContent><grid><section>';
