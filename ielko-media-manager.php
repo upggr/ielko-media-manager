@@ -879,19 +879,21 @@ function tvosXMLFunc()
         $thecategory = $cat->name;
         $thecategorydesc = $cat->description;
         if ($thecategory != 'Uncategorized') {
-            query_posts("cat=$thecatid&posts_per_page=100&post_type='media_item");
+            if ($thecategory == 'Live') {
+                query_posts("cat=$thecatid&posts_per_page=100&post_type='media_item");
 
-            echo '<section><listItemLockup><title>'.$thecategory.'</title><decorationLabel>'.$thecategorydesc.'</decorationLabel><relatedContent><grid><section>';
-            if (have_posts()) : while (have_posts()) : the_post();
-            $theurl = get_post_meta(get_the_ID(), 'media_url', true);
-            $theimg =  wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'single-post-thumbnail');
-            $theimg =  $theimg[0];
-            if (strpos($theurl, 'm3u8') !== false || strpos($theurl, 'mp4') !== false) {
-                echo '<lockup videoURL="'.$theurl.'"><img src="'.$theimg.'" width="250" height="150" /></lockup>';
+                echo '<section><listItemLockup><title>'.$thecategory.'</title><decorationLabel>'.$thecategorydesc.'</decorationLabel><relatedContent><grid><section>';
+                if (have_posts()) : while (have_posts()) : the_post();
+                $theurl = get_post_meta(get_the_ID(), 'media_url', true);
+                $theimg =  wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'single-post-thumbnail');
+                $theimg =  $theimg[0];
+                if (strpos($theurl, 'm3u8') !== false || strpos($theurl, 'mp4') !== false) {
+                    echo '<lockup videoURL="'.$theurl.'"><img src="'.$theimg.'" width="250" height="150" /></lockup>';
+                }
+                endwhile;
+                endif;
+                echo '</section></grid></relatedContent></listItemLockup></section>';
             }
-            endwhile;
-            endif;
-            echo '</section></grid></relatedContent></listItemLockup></section>';
         }
     }
     echo '</list></catalogTemplate></document>`}';
