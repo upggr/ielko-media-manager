@@ -1,0 +1,85 @@
+{
+  "videolists": [
+    {
+      "category": "Live",
+      "videos": [
+        {
+          "id": 0,
+          "description": "Watch Ionian TV - Live from Zakynthos.",
+          "sources": [
+            "http://stream.ioniantv.gr:8081/ionian/live/playlist.m3u8"
+          ],
+          "card": "http://app.ioniantv.gr/wp-content/uploads/2018/01/1.-LOGO-LIVE-800x450.png",
+          "background": "http://app.ioniantv.gr/wp-content/uploads/2018/01/1.-LOGO-LIVE-800x450.png",
+          "title": "Ionian TV - Live Stream",
+          "studio": "Watch our live broadcast"
+        },
+        {
+          "id": 1,
+          "description": "ενα mp4 Donec tristique, orci sed semper lacinia, quam erat rhoncus massa, non congue tellus est quis tellus. Sed mollis orci venenatis quam scelerisque accumsan. Curabitur a massa sit amet mi accumsan mollis sed et magna. Vivamus sed aliquam risus. Nulla eget dolor in elit facilisis mattis. Ut aliquet luctus lacus. Phasellus nec commodo erat. Praesent tempus id lectus ac scelerisque. Maecenas pretium cursus lectus id volutpat.",
+          "sources": [
+            "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4"
+          ],
+          "card": "http://corochann.com/wp-content/uploads/2015/11/waterfall_stream_nature_thumbnail.jpg",
+          "background": "http://corochann.com/wp-content/uploads/2015/11/waterfall_stream_nature_bg.jpg",
+          "title": "ενα mp4",
+          "studio": "Pexel: https://videos.pexels.com/videos/waterfall-stream-nature-423"
+        }
+      ]
+    },
+    {
+      "category": "Replay",
+      "videos": [
+        {
+          "id": 100,
+          "description": "youtube raesent viverra bibendum semper. Donec tristique, orci sed semper lacinia, quam erat rhoncus massa, non congue tellus est quis tellus. Sed mollis orci venenatis quam scelerisque accumsan. Curabitur a massa sit amet mi accumsan mollis sed et magna. Vivamus sed aliquam risus. Nulla eget dolor in elit facilisis mattis. Ut aliquet luctus lacus. Phasellus nec commodo erat. Praesent tempus id lectus ac scelerisque. Maecenas pretium cursus lectus id volutpat.",
+          "sources": [
+            "https://www.youtube.com/watch?v=rYwe3Y-EKQI"
+          ],
+          "card": "http://app.ioniantv.gr/wp-content/uploads/2018/01/1.-LOGO-LIVE-800x450.png",
+          "background": "http://app.ioniantv.gr/wp-content/uploads/2018/01/1.-LOGO-LIVE-800x450.png",
+          "title": "youtube",
+          "studio": "Pexel: https://www.youtube.com/watch?v=rYwe3Y-EKQI"
+        },
+        {
+          "id": 101,
+          "description": "Fusce id nisi turpis. Praesent viverra bibendum semper. Donec tristique, orci sed semper lacinia, quam erat rhoncus massa, non congue tellus est quis tellus. Sed mollis orci venenatis quam scelerisque accumsan. Curabitur a massa sit amet mi accumsan mollis sed et magna. Vivamus sed aliquam risus. Nulla eget dolor in elit facilisis mattis. Ut aliquet luctus lacus. Phasellus nec commodo erat. Praesent tempus id lectus ac scelerisque. Maecenas pretium cursus lectus id volutpat.",
+          "sources": [
+            "timelapse_of_stockholm_at_night.mp4"
+          ],
+          "card": "timelapse_of_stockholm_at_night_thumbnail.jpg",
+          "background": "timelapse_of_stockholm_at_night_bg.jpg",
+          "title": "Timelapse of stockholm at night",
+          "studio": "https://videos.pexels.com/videos/timelapse-of-stockholm-at-night-539"
+        }
+      ]
+    },
+    {
+      "category": "On Demand",
+      "videos": [
+        {
+          "id": 200,
+          "description": "Fusce id nisi turpis. Praesent viverra bibendum semper. Donec tristique, orci sed semper lacinia, quam erat rhoncus massa, non congue tellus est quis tellus. Sed mollis orci venenatis quam scelerisque accumsan. Curabitur a massa sit amet mi accumsan mollis sed et magna. Vivamus sed aliquam risus. Nulla eget dolor in elit facilisis mattis. Ut aliquet luctus lacus. Phasellus nec commodo erat. Praesent tempus id lectus ac scelerisque. Maecenas pretium cursus lectus id volutpat.",
+          "sources": [
+            "greenhouse_with_cacti.mp4"
+          ],
+          "card": "greenhouse_with_cacti_thumbnail.jpg",
+          "background": "greenhouse_with_cacti_bg.jpg",
+          "title": "Greenhouse with cacti",
+          "studio": "Pexel: https://videos.pexels.com/videos/greenhouse-with-cacti-534"
+        },
+        {
+          "id": 201,
+          "description": "Fusce id nisi turpis. Praesent viverra bibendum semper. Donec tristique, orci sed semper lacinia, quam erat rhoncus massa, non congue tellus est quis tellus. Sed mollis orci venenatis quam scelerisque accumsan. Curabitur a massa sit amet mi accumsan mollis sed et magna. Vivamus sed aliquam risus. Nulla eget dolor in elit facilisis mattis. Ut aliquet luctus lacus. Phasellus nec commodo erat. Praesent tempus id lectus ac scelerisque. Maecenas pretium cursus lectus id volutpat.",
+          "sources": [
+            "timelapse_of_stockholm_at_night.mp4"
+          ],
+          "card": "timelapse_of_stockholm_at_night_thumbnail.jpg",
+          "background": "timelapse_of_stockholm_at_night_bg.jpg",
+          "title": "Timelapse of stockholm at night",
+          "studio": "https://videos.pexels.com/videos/timelapse-of-stockholm-at-night-539"
+        }
+      ]
+    }
+  ]
+}
