@@ -691,7 +691,7 @@ function ionic_f()
 
 function androidtv_f()
 {
-    $postCount = 10;
+    $postCount = 50;
     $posts = query_posts('showposts=' . $postCount);
     header('Content-Type: application/json');
 
@@ -700,6 +700,16 @@ function androidtv_f()
 
     $cats = get_categories();
 
+    $args = array(
+        'orderby'                  => 'id',
+        'order'                    => 'ASC',
+    );
+
+    $cats = get_categories($args);
+    //      echo '<pre>';
+    //        print_r($cats);
+    //     echo '</pre>';
+
     foreach ($cats as $cat) {
         $thecatid = $cat->term_id;
         $thecategory = $cat->name;
@@ -707,7 +717,7 @@ function androidtv_f()
         $thecategoryimg = z_taxonomy_image_url($cat->term_id);
         //if ($thecategory == "Live") {
         //           print_r($cat_array);
-        query_posts("posts_per_page=50&cat=$thecatid&post_type=media_item&orderby=date&order=ASC");
+        query_posts("posts_per_page=20&cat=$thecatid&post_type=media_item&orderby=date&order=ASC");
         if (have_posts()) :  while (have_posts()) : the_post();
         $id = get_the_ID();
         $title = get_the_title();
@@ -721,7 +731,8 @@ function androidtv_f()
         $sources = array($theurl);
         $isactive = get_post_meta(get_the_ID(), 'media_active', true);
         $ispremium = get_post_meta(get_the_ID(), 'media_excl_premium', true);
-
+        $theimg =  wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'single-post-thumbnail');
+        $theimg =  $theimg[0];
 
         if ($isactive == 1) {
             if ($ispremium == 1) {
@@ -742,10 +753,12 @@ function androidtv_f()
                         $theimg = "https://img.youtube.com/vi/".$thevideo[1]."/hqdefault.jpg";
                     }
                 }
+                //    echo $title." - ".$thevideo[1]." - ".$theimg." \n";
                 if (!$thedescription) {
                     $thedescription = 'Enjoy '.$title.' from the '.$thecategory.' category. You may also view it on your computer using VLC or any other hls compatible audio/video player from : '.$theurl_checked;
                 }
                 $theitemarray = array(
+    "category" => $thecategory,
 "id" => $id,
 "title" => $title,
 "description" => $description,
@@ -754,27 +767,39 @@ function androidtv_f()
 "background" => $theimg,
 "sources" => array($theurl)
 );
-
-                $thevidarray[] = $theitemarray;
-
-
-                //              $thecatarray[$thecategory][] = $theitemarray;
             }
         }
+
+        $thevidarray[] = $theitemarray;
+
+
+
+        // end post loop
         endwhile;
         endif;
-        //      $themainarray["videolists"]['categories'][] = $cat_array;
+        //      echo '<pre>';
+        //        print_r($thevidarray);
+        //      echo '</pre>';
+
+
         $thecatarray = array(
           "category" => $thecategory,
           "videos" => $thevidarray
         );
+
+        $thevidarray = [];
         $the_t_list[] = $thecatarray;
-        $themainarray["videolists"] = $the_t_list;
+
+        //end cat loop
     }
+    //echo '<pre>';
+    //  print_r($the_t_list);
+    //  echo '</pre>';
+    $themainarray["videolists"] = $the_t_list;
     //}
-//    echo '<pre>';
-    //  print_r($themainarray);
-//    echo '</pre>';
+    //  echo '<pre>';
+    //    print_r($themainarray);
+    //  echo '</pre>';
 
     $json_resp = json_encode($themainarray);
     echo $json_resp;
