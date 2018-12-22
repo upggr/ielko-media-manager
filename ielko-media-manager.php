@@ -718,12 +718,15 @@ function androidtv_f()
     if (have_posts()) :  while (have_posts()) : the_post();
     //androidtv json requirements
     $id = get_the_ID();
-    $description = get_post_meta(get_the_ID(), 'media_description', true);
+    $description = get_post_meta($id, 'media_description', true);
     $card = $theimg[0];
     $background = $theimg[0];
     $title = get_the_title();
+
+    $category = get_the_category();
+    $category = $category[0];
+    echo $category;
     $studio = $category." - ".$description;
-    $category = $category[0]->cat_name;
 
     $theurl = get_post_meta(get_the_ID(), 'media_url', true);
     $sources = array($theurl);
