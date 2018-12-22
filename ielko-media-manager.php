@@ -697,12 +697,7 @@ function androidtv_f()
 
     $themainarray = array(
     "providerName" =>  get_bloginfo('name'),
-    "language" => "en-US",
-    "lastUpdated" => mysql2date(
-        'Y-m-d\TH:i:s\Z',
-        get_lastpostmodified('GMT'),
-        false
-    )
+
 );
 
     $cats = get_categories();
@@ -716,32 +711,25 @@ function androidtv_f()
         $cat_array = array(
                     "category" => $thecategory,
                 );
-        $themainarray['categories'][] = $cat_array;
+        //      $themainarray["videolists"]['categories'][] = $cat_array;
     }
 
     query_posts("posts_per_page=2&post_type=media_item&orderby=date&order=ASC");
     if (have_posts()) :  while (have_posts()) : the_post();
-    $thetitle = get_the_title();
+    //androidtv json requirements
+    $id = get_the_ID();
+    $description = get_post_meta(get_the_ID(), 'media_description', true);
+    $card = $theimg[0];
+    $background = $theimg[0];
+    $title = get_the_title();
+    $studio = $category." - ".$description;
+    $category = $category[0]->cat_name;
+
     $theurl = get_post_meta(get_the_ID(), 'media_url', true);
-    $thedescription = get_post_meta(get_the_ID(), 'media_description', true);
-    $category = get_the_category();
-    $thecategory = $category[0]->cat_name;
-    $theimg =  wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'single-post-thumbnail');
-    $theimg =  $theimg[0];
-
-    $thefrmt = 'hls';
-    $thestrg = 'full-adaptation';
-    $thequality = get_post_meta(get_the_ID(), 'media_qty', true);
-    $ispremium = get_post_meta(get_the_ID(), 'media_excl_premium', true);
+    $sources = array($theurl);
     $isactive = get_post_meta(get_the_ID(), 'media_active', true);
-    if ($thequality == 1) {
-        $thequality_ = 'SD';
-    } elseif ($thequality == 0) {
-        $thequality_ = 'HD';
-    }
-    $thebitrate = '0';
+    $ispremium = get_post_meta(get_the_ID(), 'media_excl_premium', true);
 
-    //    if (  (strpos($theurl, 'm3u8') !== false || strpos($theurl, 'mp4') !== false)  && $isactive == 1) {
     if ($isactive == 1) {
         if ($ispremium == 1) {
             $theurl_checked	= 'http://non.disclosed.com';
@@ -749,44 +737,33 @@ function androidtv_f()
             $theurl_checked = $theurl;
         }
 
-        $genres = array("special");
-        $tags = array($thecategory);
-        $captions = array();
-        if ($theimg === null) {
-            if (strpos($theurl, 'youtube') === false) {
-                $thetitle_ = preg_replace('/\s+/', '_', $thetitle);
-                $theimg = get_site_url().'/?feed=gen_img&wi=800&orig=&he=450&fontsize=30&txt='.$thetitle_.'.png';
-            } else {
-                $thevideo = explode("=", $theurl);
-                $theimg = "https://img.youtube.com/vi/".$thevideo[1]."/hqdefault.jpg";
+
+        //    if (  (strpos($theurl, 'm3u8') !== false || strpos($theurl, 'mp4') !== false)  && $isactive == 1) {
+        if ($isactive == 1) {
+            if ($theimg === null) {
+                if (strpos($theurl, 'youtube') === false) {
+                    $thetitle_ = preg_replace('/\s+/', '_', $title);
+                    $theimg = get_site_url().'/?feed=gen_img&wi=800&orig=&he=450&fontsize=30&txt='.$thetitle_.'.png';
+                } else {
+                    $thevideo = explode("=", $theurl);
+                    $theimg = "https://img.youtube.com/vi/".$thevideo[1]."/hqdefault.jpg";
+                }
             }
-        }
-        if (!$thedescription) {
-            $thedescription = 'Enjoy '.$thetitle.' from the '.$thecategory.' category. You may also view it on your computer using VLC or any other hls compatible audio/video player from : '.$theurl_checked;
-        }
-        $theitemarray = array(
-"id" => hash('ripemd160', $thetitle.$theimg.$thecatid),
-"title" => $thetitle,
-"shortDescription" => $thedescription,
-"thumbnail" => $theimg,
-"genres" => $genres,
-"tags" => $tags,
-"releaseDate" => get_the_modified_date('Y-m-d'),
-"content" => array(
-        "dateAdded" => get_the_modified_date('Y-m-d\TH:i:s\Z'),
-        "captions" => $captions,
-        "duration" => 999,
-)
+            if (!$thedescription) {
+                $thedescription = 'Enjoy '.$title.' from the '.$category.' category. You may also view it on your computer using VLC or any other hls compatible audio/video player from : '.$theurl_checked;
+            }
+            $theitemarray = array(
+"id" => hash('ripemd160', $title.$theimg.$thecatid),
+"title" => $title,
+"description" => $description,
+"card" => $theimg,
+"background" => $theimg,
+"sources" => array($theurl)
 );
 
-        $theitemarray['content']['videos'][] = array(
-"url" => $theurl,
-"quality" => $thequality_,
-"videoType" => $thefrmt
-);
-        $themainarray['tvSpecials'][] = $theitemarray;
+            $themainarray['videolists'][$category]["videos"][] = $theitemarray;
+        }
     }
-
     endwhile;
     endif;
 
