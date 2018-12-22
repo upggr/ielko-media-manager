@@ -691,7 +691,7 @@ function ionic_f()
 
 function androidtv_f()
 {
-    $postCount = 50;
+    $postCount = 500;
     $posts = query_posts('showposts=' . $postCount);
     header('Content-Type: application/json');
 
@@ -717,7 +717,7 @@ function androidtv_f()
         $thecategoryimg = z_taxonomy_image_url($cat->term_id);
         //if ($thecategory == "Live") {
         //           print_r($cat_array);
-        query_posts("posts_per_page=20&cat=$thecatid&post_type=media_item&orderby=date&order=ASC");
+        query_posts("posts_per_page=50&cat=$thecatid&post_type=media_item&orderby=date&order=desc");
         if (have_posts()) :  while (have_posts()) : the_post();
         $id = get_the_ID();
         $title = get_the_title();
