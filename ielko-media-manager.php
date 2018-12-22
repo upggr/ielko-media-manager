@@ -691,13 +691,11 @@ function ionic_f()
 
 function androidtv_f()
 {
-    $postCount = 2;
+    $postCount = 10;
     $posts = query_posts('showposts=' . $postCount);
     header('Content-Type: application/json');
 
     $themainarray = array(
-    "providerName" =>  get_bloginfo('name'),
-
 );
 
     $cats = get_categories();
@@ -708,71 +706,67 @@ function androidtv_f()
         $thecategorydesc = $cat->description;
         $thecategoryimg = z_taxonomy_image_url($cat->term_id);
 
-        $cat_array = array(
-                    "category" => $thecategory,
-                );
-        //      $themainarray["videolists"]['categories'][] = $cat_array;
-    }
-
-    query_posts("posts_per_page=2&post_type=media_item&orderby=date&order=ASC");
-    if (have_posts()) :  while (have_posts()) : the_post();
-    //androidtv json requirements
-    $id = get_the_ID();
-    $description = get_post_meta($id, 'media_description', true);
-    $card = $theimg[0];
-    $background = $theimg[0];
-    $title = get_the_title();
-
-    $category = get_the_category();
-    $category = $category[0];
-    echo $category;
-    $studio = $category." - ".$description;
-
-    $theurl = get_post_meta(get_the_ID(), 'media_url', true);
-    $sources = array($theurl);
-    $isactive = get_post_meta(get_the_ID(), 'media_active', true);
-    $ispremium = get_post_meta(get_the_ID(), 'media_excl_premium', true);
-
-    if ($isactive == 1) {
-        if ($ispremium == 1) {
-            $theurl_checked	= 'http://non.disclosed.com';
-        } else {
-            $theurl_checked = $theurl;
-        }
+        //            print_r($cat_array);
+        query_posts("posts_per_page=10&cat=$thecatid&post_type=media_item&orderby=date&order=ASC");
+        if (have_posts()) :  while (have_posts()) : the_post();
+        $id = get_the_ID();
+        $title = get_the_title();
+        $id = get_the_ID();
+        $description = get_post_meta($id, 'media_description', true);
+        $card = $theimg[0];
+        $background = $theimg[0];
+        $title = get_the_title();
+        $studio = $thecategory." - ".$description;
+        $theurl = get_post_meta(get_the_ID(), 'media_url', true);
+        $sources = array($theurl);
+        $isactive = get_post_meta(get_the_ID(), 'media_active', true);
+        $ispremium = get_post_meta(get_the_ID(), 'media_excl_premium', true);
 
 
-        //    if (  (strpos($theurl, 'm3u8') !== false || strpos($theurl, 'mp4') !== false)  && $isactive == 1) {
         if ($isactive == 1) {
-            if ($theimg === null) {
-                if (strpos($theurl, 'youtube') === false) {
-                    $thetitle_ = preg_replace('/\s+/', '_', $title);
-                    $theimg = get_site_url().'/?feed=gen_img&wi=800&orig=&he=450&fontsize=30&txt='.$thetitle_.'.png';
-                } else {
-                    $thevideo = explode("=", $theurl);
-                    $theimg = "https://img.youtube.com/vi/".$thevideo[1]."/hqdefault.jpg";
+            if ($ispremium == 1) {
+                $theurl_checked	= 'http://non.disclosed.com';
+            } else {
+                $theurl_checked = $theurl;
+            }
+
+
+            //    if (  (strpos($theurl, 'm3u8') !== false || strpos($theurl, 'mp4') !== false)  && $isactive == 1) {
+            if ($isactive == 1) {
+                if ($theimg === null) {
+                    if (strpos($theurl, 'youtube') === false) {
+                        $thetitle_ = preg_replace('/\s+/', '_', $title);
+                        $theimg = get_site_url().'/?feed=gen_img&wi=800&orig=&he=450&fontsize=30&txt='.$thetitle_.'.png';
+                    } else {
+                        $thevideo = explode("=", $theurl);
+                        $theimg = "https://img.youtube.com/vi/".$thevideo[1]."/hqdefault.jpg";
+                    }
                 }
-            }
-            if (!$thedescription) {
-                $thedescription = 'Enjoy '.$title.' from the '.$category.' category. You may also view it on your computer using VLC or any other hls compatible audio/video player from : '.$theurl_checked;
-            }
-            $theitemarray = array(
+                if (!$thedescription) {
+                    $thedescription = 'Enjoy '.$title.' from the '.$thecategory.' category. You may also view it on your computer using VLC or any other hls compatible audio/video player from : '.$theurl_checked;
+                }
+                $theitemarray = array(
 "id" => hash('ripemd160', $title.$theimg.$thecatid),
 "title" => $title,
 "description" => $description,
+"studio" => $studio,
 "card" => $theimg,
 "background" => $theimg,
 "sources" => array($theurl)
 );
 
-            $themainarray['videolists'][$category]["videos"][] = $theitemarray;
-        }
-    }
-    endwhile;
-    endif;
 
-    //	 echo '<pre>';
-    //  print_r($themainarray);
-    //	 echo '</pre>';
+                $thecatarray[$thecategory][] = $theitemarray;
+            }
+        }
+        endwhile;
+        endif;
+        //      $themainarray["videolists"]['categories'][] = $cat_array;
+    }
+
+    echo '<pre>';
+    print_r($thecatarray);
+    echo '</pre>';
 
     $json_resp = json_encode($themainarray);
     echo $json_resp;
