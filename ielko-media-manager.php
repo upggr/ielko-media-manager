@@ -705,9 +705,9 @@ function androidtv_f()
         $thecategory = $cat->name;
         $thecategorydesc = $cat->description;
         $thecategoryimg = z_taxonomy_image_url($cat->term_id);
-
-        //            print_r($cat_array);
-        query_posts("posts_per_page=10&cat=$thecatid&post_type=media_item&orderby=date&order=ASC");
+        //if ($thecategory == "Live") {
+        //           print_r($cat_array);
+        query_posts("posts_per_page=50&cat=$thecatid&post_type=media_item&orderby=date&order=ASC");
         if (have_posts()) :  while (have_posts()) : the_post();
         $id = get_the_ID();
         $title = get_the_title();
@@ -746,7 +746,7 @@ function androidtv_f()
                     $thedescription = 'Enjoy '.$title.' from the '.$thecategory.' category. You may also view it on your computer using VLC or any other hls compatible audio/video player from : '.$theurl_checked;
                 }
                 $theitemarray = array(
-"id" => hash('ripemd160', $title.$theimg.$thecatid),
+"id" => $id,
 "title" => $title,
 "description" => $description,
 "studio" => $studio,
@@ -755,18 +755,26 @@ function androidtv_f()
 "sources" => array($theurl)
 );
 
+                $thevidarray[] = $theitemarray;
 
-                $thecatarray[$thecategory][] = $theitemarray;
+
+                //              $thecatarray[$thecategory][] = $theitemarray;
             }
         }
         endwhile;
         endif;
         //      $themainarray["videolists"]['categories'][] = $cat_array;
+        $thecatarray = array(
+          "category" => $thecategory,
+          "videos" => $thevidarray
+        );
+        $the_t_list[] = $thecatarray;
+        $themainarray["videolists"] = $the_t_list;
     }
-
-    echo '<pre>';
-    print_r($thecatarray);
-    echo '</pre>';
+    //}
+//    echo '<pre>';
+    //  print_r($themainarray);
+//    echo '</pre>';
 
     $json_resp = json_encode($themainarray);
     echo $json_resp;
