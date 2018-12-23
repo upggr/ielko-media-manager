@@ -691,6 +691,7 @@ function ionic_f()
 
 function androidtv_f()
 {
+    $thecounter = 0;
     $postCount = 500;
     $posts = query_posts('showposts=' . $postCount);
     header('Content-Type: application/json');
@@ -759,7 +760,7 @@ function androidtv_f()
                 }
                 $theitemarray = array(
     "category" => $thecategory,
-"id" => $id,
+"id" => $thecounter,
 "title" => $title,
 "description" => $description,
 "studio" => $studio,
@@ -767,6 +768,8 @@ function androidtv_f()
 "background" => $theimg,
 "sources" => array($theurl)
 );
+
+                $thecounter ++;
             }
         }
 
