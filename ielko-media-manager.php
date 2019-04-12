@@ -526,7 +526,7 @@ function ionic_f_bkp()
         $thebitrate = '0';
 
             if (  (strpos($theurl, 'm3u8') !== false || strpos($theurl, 'mp4') !== false)  && $isactive == 1) {
-        if ($isactive == 1) { 
+        if ($isactive == 1) {
             if ($ispremium == 1) {
                 $theurl_checked	= 'http://non.disclosed.com';
             } else {
@@ -854,6 +854,8 @@ function androidtv_noyt_f()
         $theimg =  wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'single-post-thumbnail');
         $theimg =  $theimg[0];
 
+
+     if (  (strpos($theurl, 'm3u8') !== false || strpos($theurl, 'mp4') !== false)  && $isactive == 1) {
         if ($isactive == 1) {
             if ($ispremium == 1) {
                 $theurl_checked	= 'http://non.disclosed.com';
@@ -862,7 +864,7 @@ function androidtv_noyt_f()
             }
 
 
-            //    if (  (strpos($theurl, 'm3u8') !== false || strpos($theurl, 'mp4') !== false)  && $isactive == 1) {
+
             if ($isactive == 1) {
                 if ($theimg === null) {
                     if (strpos($theurl, 'youtube') === false) {
@@ -877,8 +879,10 @@ function androidtv_noyt_f()
                 if (!$thedescription) {
                     $thedescription = 'Enjoy '.$title.' from the '.$thecategory.' category. You may also view it on your computer using VLC or any other hls compatible audio/video player from : '.$theurl_checked;
                 }
+
+
                 $theitemarray = array(
-    "category" => $thecategory,
+"category" => $thecategory,
 "id" => $thecounter,
 "title" => $title,
 "description" => $description,
@@ -894,7 +898,7 @@ function androidtv_noyt_f()
 
         $thevidarray[] = $theitemarray;
 
-
+}
 
         // end post loop
         endwhile;
