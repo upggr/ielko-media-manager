@@ -3,7 +3,7 @@
 Plugin Name: Ielko Media Manager
 Plugin URI: https://github.com/upggr/ielko-media-manager/releases/latest
 Description: Media manager for Roku, tvOS, iOS, android, windows, ionic, osx clients
-Version: 0.2.0
+Version: 0.2.1
 Author: Ioannis Kokkinis
 Author URI: http://ielko.com
 License: Commercial
@@ -469,6 +469,11 @@ function androidtv()
     add_feed('androidtv', 'androidtv_f');
 }
 
+function androidtv_noyt()
+{
+    add_feed('androidtv_noyt', 'androidtv_noyt_f');
+}
+
 function androidtv_dev()
 {
     add_feed('androidtv_dev', 'androidtv_f_dev');
@@ -520,8 +525,8 @@ function ionic_f_bkp()
         }
         $thebitrate = '0';
 
-        //    if (  (strpos($theurl, 'm3u8') !== false || strpos($theurl, 'mp4') !== false)  && $isactive == 1) {
-        if ($isactive == 1) {
+            if (  (strpos($theurl, 'm3u8') !== false || strpos($theurl, 'mp4') !== false)  && $isactive == 1) {
+        if ($isactive == 1) { 
             if ($ispremium == 1) {
                 $theurl_checked	= 'http://non.disclosed.com';
             } else {
@@ -565,7 +570,7 @@ function ionic_f_bkp()
 );
             $themainarray['tvSpecials'][] = $theitemarray;
         }
-
+}
         endwhile;
         endif;
     }
@@ -808,7 +813,119 @@ function androidtv_f()
     echo $json_resp;
 }
 
+function androidtv_noyt_f()
+{
+    $thecounter = 0;
+    $postCount = 500;
+    $posts = query_posts('showposts=' . $postCount);
+    header('Content-Type: application/json');
 
+    $themainarray = array(
+);
+
+    $cats = get_categories();
+
+    $args = array(
+        'orderby'                  => 'id',
+        'order'                    => 'ASC',
+    );
+
+    $cats = get_categories($args);
+
+    foreach ($cats as $cat) {
+        $thecatid = $cat->term_id;
+        $thecategory = $cat->name;
+        $thecategorydesc = $cat->description;
+        $thecategoryimg = z_taxonomy_image_url($cat->term_id);
+        query_posts("posts_per_page=50&cat=$thecatid&post_type=media_item&orderby=date&order=desc");
+        if (have_posts()) :  while (have_posts()) : the_post();
+        $id = get_the_ID();
+        $title = get_the_title();
+        $id = get_the_ID();
+        $description = get_post_meta($id, 'media_description', true);
+        $card = $theimg[0];
+        $background = $theimg[0];
+        $title = get_the_title();
+        $studio = $thecategory." - ".$description;
+        $theurl = get_post_meta(get_the_ID(), 'media_url', true);
+        $sources = array($theurl);
+        $isactive = get_post_meta(get_the_ID(), 'media_active', true);
+        $ispremium = get_post_meta(get_the_ID(), 'media_excl_premium', true);
+        $theimg =  wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'single-post-thumbnail');
+        $theimg =  $theimg[0];
+
+        if ($isactive == 1) {
+            if ($ispremium == 1) {
+                $theurl_checked	= 'http://non.disclosed.com';
+            } else {
+                $theurl_checked = $theurl;
+            }
+
+
+            //    if (  (strpos($theurl, 'm3u8') !== false || strpos($theurl, 'mp4') !== false)  && $isactive == 1) {
+            if ($isactive == 1) {
+                if ($theimg === null) {
+                    if (strpos($theurl, 'youtube') === false) {
+                        $thetitle_ = preg_replace('/\s+/', '_', $title);
+                        $theimg = get_site_url().'/?feed=gen_img&wi=800&orig=&he=450&fontsize=30&txt='.$thetitle_.'.png';
+                    } else {
+                        $thevideo = explode("=", $theurl);
+                        $theimg = "https://img.youtube.com/vi/".$thevideo[1]."/hqdefault.jpg";
+                    }
+                }
+                //    echo $title." - ".$thevideo[1]." - ".$theimg." \n";
+                if (!$thedescription) {
+                    $thedescription = 'Enjoy '.$title.' from the '.$thecategory.' category. You may also view it on your computer using VLC or any other hls compatible audio/video player from : '.$theurl_checked;
+                }
+                $theitemarray = array(
+    "category" => $thecategory,
+"id" => $thecounter,
+"title" => $title,
+"description" => $description,
+"studio" => $studio,
+"card" => $theimg,
+"background" => $theimg,
+"sources" => array($theurl)
+);
+
+                $thecounter ++;
+            }
+        }
+
+        $thevidarray[] = $theitemarray;
+
+
+
+        // end post loop
+        endwhile;
+        endif;
+        //      echo '<pre>';
+        //        print_r($thevidarray);
+        //      echo '</pre>';
+
+
+        $thecatarray = array(
+          "category" => $thecategory,
+          "videos" => $thevidarray
+        );
+
+        $thevidarray = [];
+        $the_t_list[] = $thecatarray;
+
+        //end cat loop
+    }
+    //echo '<pre>';
+    //  print_r($the_t_list);
+    //  echo '</pre>';
+    $themainarray["videolists"] = $the_t_list;
+    //}
+    //  echo '<pre>';
+    //    print_r($themainarray);
+    //  echo '</pre>';
+
+    $json_resp = json_encode($themainarray);
+    echo $json_resp;
+}
 
 function rokuDP_f()
 {
@@ -1418,6 +1535,7 @@ function ivc_settings_section_intro()
 	Your direct publisher ROKU feed is accessible from <a href="'.get_site_url().'/?feed=roku_dp">'.get_site_url().'/?feed=roku_dp</a><br />
 		Your ios/android ionic feed is accessible from <a href="'.get_site_url().'/?feed=ionic">'.get_site_url().'/?feed=ionic</a><br />
     	Your androidTV  feed is accessible from <a href="'.get_site_url().'/?feed=androidtv">'.get_site_url().'/?feed=androidtv</a><br />
+      	Your androidTV (noyoutube)  feed is accessible from <a href="'.get_site_url().'/?feed=androidtv_noyt">'.get_site_url().'/?feed=androidtv_noyt</a><br />
   Your TVOS feed is accessible from <a href="'.get_site_url().'/?feed=tvos">'.get_site_url().'/?feed=tvos</a><br />
 	Your Android (Variant 1) feed is accessible from <a href="'.get_site_url().'/?feed=android1">'.get_site_url().'/?feed=android1</a><br />
 	The dead link checker is at :  <a href="'.get_site_url().'/?feed=checkdead">'.get_site_url().'/?feed=checkdead</a><br />
@@ -1555,6 +1673,7 @@ add_action('init', 'genimg');
 add_action('init', 'rokuDP');
 add_action('init', 'ionic');
 add_action('init', 'androidtv');
+add_action('init', 'androidtv_noyt');
 add_action('init', 'ionic_dev');
 add_action('init', 'androidtv_dev');
 add_action('init', 'rokuXMLcats');
