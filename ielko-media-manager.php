@@ -19,7 +19,7 @@ if (! class_exists('WC_CPInstallCheck')) {
     class WC_CPInstallCheck
     {
         public static function install()
-        {  
+        {   
             if (!in_array('categories-images/categories-images.php', apply_filters('active_plugins', get_option('active_plugins')))
             ||
                     !in_array('wp-cors/wp-cors.php', apply_filters('active_plugins', get_option('active_plugins')))) {
