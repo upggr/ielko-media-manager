@@ -504,78 +504,90 @@ function ionic_f_dev()
         $thecategory = $cat->name;
         $thecategorydesc = $cat->description;
         $thecategoryimg = z_taxonomy_image_url($cat->term_id);
-        query_posts("cat=$thecatid&posts_per_page=1000&post_type=media_item");
-        if (have_posts()) :
-                    while (have_posts()) : the_post();
-        $thetitle = get_the_title();
-        $theurl = get_post_meta(get_the_ID(), 'media_url', true);
-        $thedescription = get_post_meta(get_the_ID(), 'media_description', true);
 
-        $theimg =  wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'single-post-thumbnail');
-        $theimg =  $theimg[0];
+        $cat_array = array(
+                    "category_id" => $thecatid,
+                    "category_name" => $thecategory,
+                    "category_desc" => $thecategorydesc,
+                    "category_img" => $thecategoryimg,
+                );
+        $themainarray['categories'][] = $cat_array;
+    }
 
-        $thefrmt = 'hls';
-        $thestrg = 'full-adaptation';
-        $thequality = get_post_meta(get_the_ID(), 'media_qty', true);
-        $ispremium = get_post_meta(get_the_ID(), 'media_excl_premium', true);
-        $isactive = get_post_meta(get_the_ID(), 'media_active', true);
-        if ($thequality == 1) {
-            $thequality_ = 'SD';
-        } elseif ($thequality == 0) {
-            $thequality_ = 'HD';
+    query_posts("posts_per_page=1000&post_type=media_item&orderby=date&order=ASC");
+    if (have_posts()) :  while (have_posts()) : the_post();
+    $thetitle = get_the_title();
+    $theurl = get_post_meta(get_the_ID(), 'media_url', true);
+    $thedescription = get_post_meta(get_the_ID(), 'media_description', true);
+    $category = get_the_category();
+    $thecategory = $category[0]->cat_name;
+    $theimg =  wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'single-post-thumbnail');
+    $theimg =  $theimg[0];
+
+    $thefrmt = 'hls';
+    $thestrg = 'full-adaptation';
+    $thequality = get_post_meta(get_the_ID(), 'media_qty', true);
+    $ispremium = get_post_meta(get_the_ID(), 'media_excl_premium', true);
+    $isactive = get_post_meta(get_the_ID(), 'media_active', true);
+    if ($thequality == 1) {
+        $thequality_ = 'SD';
+    } elseif ($thequality == 0) {
+        $thequality_ = 'HD';
+    }
+    $thebitrate = '0';
+
+    //    if (  (strpos($theurl, 'm3u8') !== false || strpos($theurl, 'mp4') !== false)  && $isactive == 1) {
+    if ($isactive == 1) {
+        if ($ispremium == 1) {
+            $theurl_checked	= 'http://non.disclosed.com';
+        } else {
+            $theurl_checked = $theurl;
         }
-        $thebitrate = '0';
 
-            if (  (strpos($theurl, 'm3u8') !== false || strpos($theurl, 'mp4') !== false)  && $isactive == 1) {
-        if ($isactive == 1) {
-            if ($ispremium == 1) {
-                $theurl_checked	= 'http://non.disclosed.com';
+        $genres = array("special");
+        $tags = array($thecategory);
+        $captions = array();
+        if ($theimg === null) {
+            if (strpos($theurl, 'youtube') === false) {
+                $thetitle_ = preg_replace('/\s+/', '_', $thetitle);
+                $theimg = get_site_url().'/?feed=gen_img&wi=800&orig=&he=450&fontsize=30&txt='.$thetitle_.'.png';
             } else {
-                $theurl_checked = $theurl;
+                $thevideo = explode("=", $theurl);
+                $theimg = "https://img.youtube.com/vi/".$thevideo[1]."/hqdefault.jpg";
             }
-
-            $genres = array("special");
-            $tags = array($thecategory);
-            $captions = array();
-            if ($theimg === null) {
-                if (strpos($theurl, 'youtube') === false) {
-                    $thetitle_ = preg_replace('/\s+/', '_', $thetitle);
-                    $theimg = get_site_url().'/?feed=gen_img&wi=800&orig=&he=450&fontsize=30&txt='.$thetitle_.'.png';
-                } else {
-                    $thevideo = explode("=", $theurl);
-                    $theimg = "https://img.youtube.com/vi/".$thevideo[1]."/hqdefault.jpg";
-                }
-            }
-            if (!$thedescription) {
-                $thedescription = 'Enjoy '.$thetitle.' from the '.$thecategory.' category. You may also view it on your computer using VLC or any other hls compatible audio/video player from : '.$theurl_checked;
-            }
-            $theitemarray = array(
-    "id" => hash('ripemd160', $thetitle.$theimg.$thecatid),
-    "title" => $thetitle,
-    "shortDescription" => $thedescription,
-    "thumbnail" => $theimg,
-    "genres" => $genres,
-    "tags" => $tags,
-    "releaseDate" => get_the_modified_date('Y-m-d'),
-    "content" => array(
+        }
+        if (!$thedescription) {
+            $thedescription = 'Enjoy '.$thetitle.' from the '.$thecategory.' category. You may also view it on your computer using VLC or any other hls compatible audio/video player from : '.$theurl_checked;
+        }
+        $theitemarray = array(
+"id" => hash('ripemd160', $thetitle.$theimg.$thecatid),
+"title" => $thetitle,
+"shortDescription" => $thedescription,
+"thumbnail" => $theimg,
+"genres" => $genres,
+"tags" => $tags,
+"releaseDate" => get_the_modified_date('Y-m-d'),
+"content" => array(
         "dateAdded" => get_the_modified_date('Y-m-d\TH:i:s\Z'),
         "captions" => $captions,
         "duration" => 999,
-    )
+)
 );
 
-            $theitemarray['content']['videos'][] = array(
-    "url" => $theurl,
-    "quality" => $thequality_,
-    "videoType" => $thefrmt
+        $theitemarray['content']['videos'][] = array(
+"url" => $theurl,
+"quality" => $thequality_,
+"videoType" => $thefrmt
 );
-            $themainarray['tvSpecials'][] = $theitemarray;
-        }
-}
-        endwhile;
-        endif;
+        $themainarray['tvSpecials'][] = $theitemarray;
     }
 
+    endwhile;
+    endif;
+
+    //	 echo '<pre>';
+    //  print_r($themainarray);
+    //	 echo '</pre>';
 
     $json_resp = json_encode($themainarray);
     echo $json_resp;
