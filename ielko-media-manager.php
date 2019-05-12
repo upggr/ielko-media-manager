@@ -573,6 +573,7 @@ function ionic_f_dev()
         "duration" => 999,
 )
 );
+echo get_the_modified_date('Y-m-d')." - ".$thecategory." - ".$thetitle."\n";
 
         $theitemarray['content']['videos'][] = array(
 "url" => $theurl,
@@ -585,12 +586,12 @@ function ionic_f_dev()
     endwhile;
     endif;
 
-    //	 echo '<pre>';
-    //  print_r($themainarray);
-    //	 echo '</pre>';
+//    	 echo '<pre>';
+//      print_r($themainarray);
+  //  	 echo '</pre>';
 
-    $json_resp = json_encode($themainarray);
-    echo $json_resp;
+//    $json_resp = json_encode($themainarray);
+//    echo $json_resp;
 }
 
 
@@ -696,7 +697,7 @@ function ionic_f_bkp()
 
 function ionic_f()
 {
-    $postCount = 1000;
+    $postCount = 1200;
     $posts = query_posts('showposts=' . $postCount);
     header('Content-Type: application/json');
 
@@ -727,7 +728,7 @@ function ionic_f()
         $themainarray['categories'][] = $cat_array;
     }
 
-    query_posts("posts_per_page=1000&post_type=media_item&orderby=date&order=ASC");
+    query_posts("posts_per_page=1200&post_type=media_item&orderby=date&order=ASC");
     if (have_posts()) :  while (have_posts()) : the_post();
     $thetitle = get_the_title();
     $theurl = get_post_meta(get_the_ID(), 'media_url', true);
