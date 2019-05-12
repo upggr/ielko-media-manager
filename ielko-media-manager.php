@@ -3,7 +3,7 @@
 Plugin Name: Ielko Media Manager
 Plugin URI: https://github.com/upggr/ielko-media-manager/releases/latest
 Description: Media manager for Roku, tvOS, iOS, android, windows, ionic, osx clients
-Version: 0.2.3
+Version: 0.2.4
 Author: Ioannis Kokkinis
 Author URI: http://ielko.com
 License: Commercial
