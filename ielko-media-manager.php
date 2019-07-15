@@ -3,7 +3,7 @@
 Plugin Name: Ielko Media Manager
 Plugin URI: https://github.com/upggr/ielko-media-manager/releases/latest
 Description: Media manager for Roku, tvOS, iOS, android, windows, ionic, osx clients
-Version: 0.2.5
+Version: 0.2.6
 Author: Ioannis Kokkinis
 Author URI: http://ielko.com
 License: Commercial
@@ -697,7 +697,7 @@ function ionic_f_bkp()
 
 function ionic_f()
 {
-    $postCount = 1200;
+    $postCount = 1500;
     $posts = query_posts('showposts=' . $postCount);
     header('Content-Type: application/json');
 
@@ -728,7 +728,7 @@ function ionic_f()
         $themainarray['categories'][] = $cat_array;
     }
 
-    query_posts("posts_per_page=1200&post_type=media_item&orderby=date&order=ASC");
+    query_posts("posts_per_page=1500&post_type=media_item&orderby=date&order=ASC");
     if (have_posts()) :  while (have_posts()) : the_post();
     $thetitle = get_the_title();
     $theurl = get_post_meta(get_the_ID(), 'media_url', true);
