@@ -3,7 +3,7 @@
 Plugin Name: Ielko Media Manager
 Plugin URI: https://github.com/upggr/ielko-media-manager/releases/latest
 Description: Media manager for Roku, tvOS, iOS, android, windows, ionic, osx clients
-Version: 0.2.8
+Version: 0.3.0
 Author: Ioannis Kokkinis
 Author URI: http://ielko.com
 License: Commercial
@@ -526,13 +526,13 @@ function androidtv_dev()
 
 function ionic_f_dev()
 {
-    $postCount = 10;
+    $postCount = 50000;
     $posts = query_posts('showposts=' . $postCount);
     header('Content-Type: application/json');
 
     $themainarray = array(
     "providerName" =>  get_bloginfo('name'),
-    "language" => "en-USe",
+    "language" => "en-US",
     "lastUpdated" => mysql2date(
         'Y-m-d\TH:i:s\Z',
         get_lastpostmodified('GMT'),
@@ -557,7 +557,7 @@ function ionic_f_dev()
         $themainarray['categories'][] = $cat_array;
     }
 
-    query_posts("posts_per_page=10&post_type=media_item&orderby=date&order=ASC");
+    query_posts("posts_per_page=50000&post_type=media_item&orderby=date&order=ASC");
     if (have_posts()) :  while (have_posts()) : the_post();
     $thetitle = get_the_title();
     $theurl = get_post_meta(get_the_ID(), 'media_url', true);
@@ -614,27 +614,32 @@ function ionic_f_dev()
         "dateAdded" => get_the_modified_date('Y-m-d\TH:i:s\Z'),
         "captions" => $captions,
         "duration" => 999,
+        "cat" => $thecategory
+
 )
 );
-//echo get_the_modified_date('Y-m-d')." - ".$thecategory." - ".$thetitle."\n";
 
-        $theitemarray['content']['videos'][] = array(
+if (get_the_modified_date('U') > (time() - 7776000) || $thecategory == 'Live' || $thecategory == 'Replay') {
+  $theitemarray['content']['videos'][] = array(
 "url" => $theurl,
 "quality" => $thequality_,
 "videoType" => $thefrmt
 );
-        $themainarray['tvSpecials'][] = $theitemarray;
+  $themainarray['tvSpecials'][] = $theitemarray;
+}
+
+
     }
 
     endwhile;
     endif;
 
-//    	 echo '<pre>';
-//      print_r($themainarray);
-//    	 echo '</pre>';
+    	 echo '<pre>';
+      print_r($themainarray);
+    	 echo '</pre>';
 
-//    $json_resp = json_encode($themainarray);
-//    echo $json_resp;
+    $json_resp = json_encode($themainarray);
+    echo $json_resp;
 }
 
 
@@ -740,7 +745,7 @@ function ionic_f_bkp()
 
 function ionic_f()
 {
-    $postCount = 1500;
+    $postCount = 5000;
     $posts = query_posts('showposts=' . $postCount);
     header('Content-Type: application/json');
 
@@ -771,7 +776,7 @@ function ionic_f()
         $themainarray['categories'][] = $cat_array;
     }
 
-    query_posts("posts_per_page=1500&post_type=media_item&orderby=date&order=ASC");
+    query_posts("posts_per_page=5000&post_type=media_item&orderby=date&order=ASC");
     if (have_posts()) :  while (have_posts()) : the_post();
     $thetitle = get_the_title();
     $theurl = get_post_meta(get_the_ID(), 'media_url', true);
@@ -831,6 +836,8 @@ function ionic_f()
 )
 );
 
+if (get_the_modified_date('U') > (time() - 7776000) || $thecategory == 'Live' || $thecategory == 'Replay') {
+
         $theitemarray['content']['videos'][] = array(
 "url" => $theurl,
 "quality" => $thequality_,
@@ -838,7 +845,7 @@ function ionic_f()
 );
         $themainarray['tvSpecials'][] = $theitemarray;
     }
-
+}
     endwhile;
     endif;
 
