@@ -532,7 +532,7 @@ function ionic_f_dev()
 
     $themainarray = array(
     "providerName" =>  get_bloginfo('name'),
-    "language" => "en-US",
+    "language" => "en-USe",
     "lastUpdated" => mysql2date(
         'Y-m-d\TH:i:s\Z',
         get_lastpostmodified('GMT'),
