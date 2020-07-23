@@ -3,7 +3,7 @@
 Plugin Name: Ielko Media Manager
 Plugin URI: https://github.com/upggr/ielko-media-manager/releases/latest
 Description: Media manager for Roku, tvOS, iOS, android, windows, ionic, osx clients
-Version: 0.2.6
+Version: 0.2.8
 Author: Ioannis Kokkinis
 Author URI: http://ielko.com
 License: Commercial
@@ -82,6 +82,7 @@ function ielko_wp_media_manager()
         'exclude_from_search'   => false,
         'publicly_queryable'    => true,
         'capability_type'       => 'page',
+        'show_in_rest' => true,
     );
     register_post_type('media_item', $args);
 }
@@ -296,6 +297,48 @@ while ($wpb_all_query->have_posts()) : $wpb_all_query->the_post();
 }
 
 add_shortcode('ielko_channels', 'channel_list');
+
+
+
+function wds_ielkomedia_endpoint() {
+
+    add_rewrite_tag( '%wds_ielkomedia%', '([^&]+)' );
+    add_rewrite_rule( 'ielko/([^&]+)/?', 'index.php?wds_ielkomedia=$matches[1]', 'top' );
+
+}
+add_action( 'init', 'wds_ielkomedia_endpoint' );
+
+
+function wds_ielkomedia_endpoint_data() {
+    global $wp_query;
+    $ielkomedia_tag = $wp_query->get( 'wds_ielkomedia' );
+    if ( ! $ielkomedia_tag ) {
+        return;
+    }
+
+    $ielkomedia_data = array();
+
+    $args = array(
+        'post_type'      => 'wds_ielkomedia',
+        'posts_per_page' => 100,
+        'category_name'  => esc_attr( $ielkomedia_tag ),
+    );
+    $ielkomedia_query = new WP_Query( $args );
+    if ( $ielkomedia_query->have_posts() ) : while ( $ielkomedia_query->have_posts() ) : $ielkomedia_query->the_post();
+        $img_id = get_post_thumbnail_id();
+        $img = wp_get_attachment_image_src( $img_id, 'full' );
+        $ielkomedia_data[] = array(
+            'link'  => esc_url( $img[0] ),
+            'title' => get_the_title(),
+        );
+    endwhile; wp_reset_postdata(); endif;
+
+    wp_send_json( $ielkomedia_data );
+
+}
+add_action( 'template_redirect', 'wds_ielkomedia_endpoint_data' );
+
+
 
 
 
@@ -514,7 +557,7 @@ function ionic_f_dev()
         $themainarray['categories'][] = $cat_array;
     }
 
-    query_posts("posts_per_page=1000&post_type=media_item&orderby=date&order=ASC");
+    query_posts("posts_per_page=10&post_type=media_item&orderby=date&order=ASC");
     if (have_posts()) :  while (have_posts()) : the_post();
     $thetitle = get_the_title();
     $theurl = get_post_meta(get_the_ID(), 'media_url', true);
@@ -573,7 +616,7 @@ function ionic_f_dev()
         "duration" => 999,
 )
 );
-echo get_the_modified_date('Y-m-d')." - ".$thecategory." - ".$thetitle."\n";
+//echo get_the_modified_date('Y-m-d')." - ".$thecategory." - ".$thetitle."\n";
 
         $theitemarray['content']['videos'][] = array(
 "url" => $theurl,
@@ -588,7 +631,7 @@ echo get_the_modified_date('Y-m-d')." - ".$thecategory." - ".$thetitle."\n";
 
 //    	 echo '<pre>';
 //      print_r($themainarray);
-  //  	 echo '</pre>';
+//    	 echo '</pre>';
 
 //    $json_resp = json_encode($themainarray);
 //    echo $json_resp;
