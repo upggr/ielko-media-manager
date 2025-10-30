@@ -32,6 +32,12 @@ if (! class_exists('WC_CPInstallCheck')) {
 }
 register_activation_hook(__FILE__, array('WC_CPInstallCheck', 'install'));
 
+// Add a fallback function if Categories Images plugin is not active
+if (!function_exists('z_taxonomy_image_url')) {
+    function z_taxonomy_image_url($term_id = NULL) {
+        return '';
+    }
+}
 
 function ielko_wp_media_manager()
 {
