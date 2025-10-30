@@ -127,7 +127,10 @@ class IelkoUpdater
         }
         $response->download_link = $downloadLink;
 
-        require_once(plugin_dir_path(__FILE__) . "Parsedown.php");
+        $parsedown_file = plugin_dir_path(__FILE__) . "Parsedown.php";
+        if (file_exists($parsedown_file)) {
+            require_once($parsedown_file);
+        }
 
         // Create tabs in the lightbox
         $response->sections = array(
