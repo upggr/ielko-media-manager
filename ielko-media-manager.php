@@ -7,6 +7,7 @@ Version: 0.3.6
 Author: Ioannis Kokkinis
 Author URI: http://ielko.com
 License: Commercial
+Requires Plugins: categories-images, wp-cors
 */
 
 
