@@ -3,7 +3,7 @@
 Plugin Name: Ielko Media Manager
 Plugin URI: https://github.com/upggr/ielko-media-manager/releases/latest
 Description: Media manager for Roku, tvOS, iOS, android, windows, ionic, osx clients
-Version: 0.3.2
+Version: 0.3.3
 Author: Ioannis Kokkinis
 Author URI: http://ielko.com
 License: Commercial
@@ -148,7 +148,7 @@ function checkactive($thevar, $thecheck)
 {
     if ($thevar == $thecheck) {
         return 'checked';
-    } elseif ($thevar =! $thecheck) {
+    } elseif ($thevar != $thecheck) {
         return '';
     }
 }
@@ -235,7 +235,7 @@ function create_work_meta($post)
 
 function save_media_meta($post_id)
 {
-    if (!isset($_POST['media_meta_box_nonce']) || !wp_verify_nonce($_POST['media_meta_box_nonce'], basename(__FILE__))) {
+    if (!isset($_POST['media_meta_box_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['media_meta_box_nonce'])), basename(__FILE__))) {
         return;
     }
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
@@ -288,7 +288,7 @@ while ($wpb_all_query->have_posts()) : $wpb_all_query->the_post();
     $theurl = get_post_meta(get_the_ID(), 'media_url', true);
     $thedescription = get_post_meta(get_the_ID(), 'media_description', true);
     $theimg =  wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'single-post-thumbnail');
-    $theimg =  $theimg[0];
+    $theimg =  is_array($theimg) ? $theimg[0] : '';
     echo '<a target="_blank" href="http://greektv.upg.gr/upg_player.html?play='.$theurl.'">'.$thetitle.'</a><br />';
     endwhile;
     wp_reset_postdata(); else :
@@ -371,7 +371,7 @@ function rokuXMLFunc()
             $theurl = get_post_meta(get_the_ID(), 'media_url', true);
             $thedescription = get_post_meta(get_the_ID(), 'media_description', true);
             $theimg =  wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'single-post-thumbnail');
-            $theimg =  $theimg[0];
+            $theimg =  is_array($theimg) ? $theimg[0] : '';
             $thefrmt = 'hls';
             $thestrg = 'full-adaptation';
             $thequality = get_post_meta(get_the_ID(), 'media_qty', true);
@@ -462,10 +462,10 @@ function genimg()
 
 function genimg_f()
 {
-    $orig = $_GET['orig'];
-    $wi = $_GET['wi'];
-    $he = $_GET['he'];
-    $txt = $_GET['txt'];
+    $orig = isset($_GET['orig']) ? sanitize_text_field($_GET['orig']) : '';
+    $wi = isset($_GET['wi']) ? intval($_GET['wi']) : 0;
+    $he = isset($_GET['he']) ? intval($_GET['he']) : 0;
+    $txt = isset($_GET['txt']) ? sanitize_text_field($_GET['txt']) : '';
     header("Content-type:image/png");
     //header("Content-disposition: attachment; filename=".$txt.".png");
     $txt = substr_replace($txt, "", -4);
@@ -473,12 +473,13 @@ function genimg_f()
 
     if ($orig=="") {
         $options = get_option('ivc_settings');
-        $orig = str_replace(get_site_url(), "", $options['ivc_image_field_5']);
+        $options = is_array($options) ? $options : array();
+        $orig = isset($options['ivc_image_field_5']) ? str_replace(get_site_url(), "", $options['ivc_image_field_5']) : '';
         $upload_dir = wp_upload_dir();
         $upload_dir = $upload_dir['basedir'];
         $orig = str_replace('/wp-content/uploads', $upload_dir, $orig);
     }
-    $fontsize = $_GET['fontsize'];
+    $fontsize = isset($_GET['fontsize']) ? intval($_GET['fontsize']) : 30;
     $imagetobewatermark=imagecreatefrompng($orig);
     $watermarktext = $txt;
     $font= plugin_dir_path(__FILE__) . 'font/cent.ttf';
@@ -563,9 +564,9 @@ function ionic_f_dev()
     $theurl = get_post_meta(get_the_ID(), 'media_url', true);
     $thedescription = get_post_meta(get_the_ID(), 'media_description', true);
     $category = get_the_category();
-    $thecategory = $category[0]->cat_name;
+    $thecategory = !empty($category) ? $category[0]->cat_name : 'Uncategorized';
     $theimg =  wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'single-post-thumbnail');
-    $theimg =  $theimg[0];
+    $theimg =  is_array($theimg) ? $theimg[0] : null;
 
     $thefrmt = 'hls';
     $thestrg = 'full-adaptation';
@@ -674,7 +675,7 @@ function ionic_f_bkp()
         $thedescription = get_post_meta(get_the_ID(), 'media_description', true);
 
         $theimg =  wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'single-post-thumbnail');
-        $theimg =  $theimg[0];
+        $theimg =  is_array($theimg) ? $theimg[0] : null;
 
         $thefrmt = 'hls';
         $thestrg = 'full-adaptation';
@@ -782,9 +783,9 @@ function ionic_f()
     $theurl = get_post_meta(get_the_ID(), 'media_url', true);
     $thedescription = get_post_meta(get_the_ID(), 'media_description', true);
     $category = get_the_category();
-    $thecategory = $category[0]->cat_name;
+    $thecategory = !empty($category) ? $category[0]->cat_name : 'Uncategorized';
     $theimg =  wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'single-post-thumbnail');
-    $theimg =  $theimg[0];
+    $theimg =  is_array($theimg) ? $theimg[0] : null;
 
     $thefrmt = 'hls';
     $thestrg = 'full-adaptation';
@@ -903,7 +904,7 @@ function androidtv_f()
         $isactive = get_post_meta(get_the_ID(), 'media_active', true);
         $ispremium = get_post_meta(get_the_ID(), 'media_excl_premium', true);
         $theimg =  wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'single-post-thumbnail');
-        $theimg =  $theimg[0];
+        $theimg =  is_array($theimg) ? $theimg[0] : null;
 
         if ($isactive == 1) {
             if ($ispremium == 1) {
@@ -1017,7 +1018,7 @@ function androidtv_noyt_f()
         $isactive = get_post_meta(get_the_ID(), 'media_active', true);
         $ispremium = get_post_meta(get_the_ID(), 'media_excl_premium', true);
         $theimg =  wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'single-post-thumbnail');
-        $theimg =  $theimg[0];
+        $theimg =  is_array($theimg) ? $theimg[0] : null;
 
 
      if (  (strpos($theurl, 'm3u8') !== false || strpos($theurl, 'mp4') !== false)  && $isactive == 1) {
@@ -1126,7 +1127,7 @@ function rokuDP_f()
         $theurl = get_post_meta(get_the_ID(), 'media_url', true);
         $thedescription = get_post_meta(get_the_ID(), 'media_description', true);
         $theimg =  wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'single-post-thumbnail');
-        $theimg =  $theimg[0];
+        $theimg =  is_array($theimg) ? $theimg[0] : null;
         $thefrmt = 'hls';
         $thestrg = 'full-adaptation';
         $thequality = get_post_meta(get_the_ID(), 'media_qty', true);
@@ -1208,7 +1209,7 @@ function rokuXMLbycat_f()
         $thecategory = $cat->name;
         $thecategorydesc = $cat->description;
         $thecategoryimg = z_taxonomy_image_url($cat->term_id);
-        if ($thecatid == $_GET['cat']) {
+        if (isset($_GET['cat']) && $thecatid == intval($_GET['cat'])) {
             query_posts("cat=$thecatid&posts_per_page=1000&post_type=media_item");
 
             if (have_posts()) :
@@ -1236,7 +1237,7 @@ function rokuXMLbycat_f()
                     $thedescription = 'Enjoy '.$thetitle.' from the '.$thecategory.' category. You may also view it on your computer using VLC or any other hls compatible audio/video player from : '.$theurl_checked;
                 }
                 $theimg =  wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'single-post-thumbnail');
-                $theimg =  $theimg[0];
+                $theimg =  is_array($theimg) ? $theimg[0] : null;
                 if ($theimg === null) {
                     $thetitle_ = preg_replace('/\s+/', '_', $thetitle);
                     $theimg = get_site_url().'/?feed=gen_img&wi=800&orig=&he=450&fontsize=30&txt='.$thetitle_.'.png';
@@ -1306,7 +1307,7 @@ function tvosXMLFunc()
                 if (have_posts()) : while (have_posts()) : the_post();
                 $theurl = get_post_meta(get_the_ID(), 'media_url', true);
                 $theimg =  wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'single-post-thumbnail');
-                $theimg =  $theimg[0];
+                $theimg =  is_array($theimg) ? $theimg[0] : '';
                 if (strpos($theurl, 'm3u8') !== false || strpos($theurl, 'mp4') !== false) {
                     echo '<lockup videoURL="'.$theurl.'"><img src="'.$theimg.'" width="250" height="150" /></lockup>';
                 }
@@ -1329,7 +1330,7 @@ function remoteUpdateFunc()
 {
     header('Content-Type: text/html');
     $data = array();
-    $rfeed = $_GET['remotefeed'];
+    $rfeed = isset($_GET['remotefeed']) ? sanitize_text_field($_GET['remotefeed']) : '';
     if (strpos($rfeed, '.m3u') !== false) {
         echo 'this is m3u<br />';
         $rawData = file($rfeed, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
@@ -1484,7 +1485,7 @@ function android1XMLFunc()
             $thedescription = get_post_meta(get_the_ID(), 'media_description', true);
             $theurl = get_post_meta(get_the_ID(), 'media_url', true);
             $theimg =  wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'single-post-thumbnail');
-            $theimg =  $theimg[0];
+            $theimg =  is_array($theimg) ? $theimg[0] : '';
             echo '<channel enable=""><name>'.$thetitle.'</name><group>'.$thecategory.'</group><logo>'.$theimg.'</logo><url>'.$theurl.'</url><info>'.$thedescription.'</info></channel>';
             endwhile;
             endif;
@@ -1583,6 +1584,7 @@ function ivc_settings_init()
 function ivc_checkbox_field_0_render()
 {
     $options = get_option('ivc_settings');
+    $options = is_array($options) ? $options : array();
     if (isset($options['ivc_checkbox_field_0'])) {
         ?>
 <input type='checkbox' name='ivc_settings[ivc_checkbox_field_0]' <?php checked($options['ivc_checkbox_field_0'], 1); ?> value='1'>
@@ -1599,6 +1601,7 @@ function ivc_checkbox_field_0_render()
 function ivc_checkbox_field_1_render()
 {
     $options = get_option('ivc_settings');
+    $options = is_array($options) ? $options : array();
     if (isset($options['ivc_checkbox_field_1'])) {
         ?>
 	<input type='checkbox' name='ivc_settings[ivc_checkbox_field_1]' <?php checked($options['ivc_checkbox_field_1'], 1); ?> value='1'>
@@ -1614,6 +1617,7 @@ function ivc_checkbox_field_1_render()
 function ivc_text_field_1_render()
 {
     $options = get_option('ivc_settings');
+    $options = is_array($options) ? $options : array();
     if (isset($options['ivc_text_field_1'])) {
         ?>
 	<input type='text' name='ivc_settings[ivc_text_field_1]' value='<?php echo $options['ivc_text_field_1']; ?>' style='width:50%'>
@@ -1629,6 +1633,7 @@ function ivc_text_field_1_render()
 function ivc_text_field_2_render()
 {
     $options = get_option('ivc_settings');
+    $options = is_array($options) ? $options : array();
     if (isset($options['ivc_text_field_2'])) {
         ?>
 	<input type='text' name='ivc_settings[ivc_text_field_2]' value='<?php echo $options['ivc_text_field_2']; ?>' style='width:50%'>
@@ -1642,16 +1647,18 @@ function ivc_text_field_2_render()
 }
 function ivc_image_field_0_render()
 {
-    $options = get_option('ivc_settings'); ?>
-	 <input type="text" name="ivc_settings[ivc_image_field_0]" id="image_url" class="regular-text" value="<?php echo $options['ivc_image_field_0']; ?>">
+    $options = get_option('ivc_settings');
+    $options = is_array($options) ? $options : array(); ?>
+	 <input type="text" name="ivc_settings[ivc_image_field_0]" id="image_url" class="regular-text" value="<?php echo isset($options['ivc_image_field_0']) ? esc_attr($options['ivc_image_field_0']) : ''; ?>">
 	 <input type="button" name="upload-btn" id="upload-btn" class="button-secondary" value="Upload Image">
 	<?php
 }
 
 function ivc_image_field_1_render()
 {
-    $options = get_option('ivc_settings'); ?>
-	 <input type="text" name="ivc_settings[ivc_image_field_1]" id="image_url1" class="regular-text" value="<?php echo $options['ivc_image_field_1']; ?>">
+    $options = get_option('ivc_settings');
+    $options = is_array($options) ? $options : array(); ?>
+	 <input type="text" name="ivc_settings[ivc_image_field_1]" id="image_url1" class="regular-text" value="<?php echo isset($options['ivc_image_field_1']) ? esc_attr($options['ivc_image_field_1']) : ''; ?>">
 	 <input type="button" name="upload-btn1" id="upload-btn1" class="button-secondary" value="Upload Image">
 	<?php
 }
@@ -1660,8 +1667,9 @@ function ivc_image_field_1_render()
 
 function ivc_image_field_5_render()
 {
-    $options = get_option('ivc_settings'); ?>
-	 <input type="text" name="ivc_settings[ivc_image_field_5]" id="image_url5" class="regular-text" value="<?php echo $options['ivc_image_field_5']; ?>">
+    $options = get_option('ivc_settings');
+    $options = is_array($options) ? $options : array(); ?>
+	 <input type="text" name="ivc_settings[ivc_image_field_5]" id="image_url5" class="regular-text" value="<?php echo isset($options['ivc_image_field_5']) ? esc_attr($options['ivc_image_field_5']) : ''; ?>">
 	 <input type="button" name="upload-btn5" id="upload-btn5" class="button-secondary" value="Upload Image">
 	<?php
 }
@@ -1669,6 +1677,11 @@ function ivc_image_field_5_render()
 function ivc_settings_section_intro()
 {
     $options = get_option('ivc_settings');
+    $options = is_array($options) ? $options : array();
+    $text_field_1 = isset($options['ivc_text_field_1']) ? $options['ivc_text_field_1'] : '';
+    $text_field_2 = isset($options['ivc_text_field_2']) ? $options['ivc_text_field_2'] : '';
+    $image_field_0 = isset($options['ivc_image_field_0']) ? $options['ivc_image_field_0'] : '';
+    $image_field_1 = isset($options['ivc_image_field_1']) ? $options['ivc_image_field_1'] : '';
     echo __('Thank you for installing the IELKO plugin.
   <br />
 	  <br />
@@ -1684,18 +1697,18 @@ function ivc_settings_section_intro()
 		<b>STEP 2</b> : Complete the fields bellow on this page.
 			<br />
 			<br />
-			<b>STEP 3</b> : 	<span id="roku_app" fname="'.hash('ripemd160', get_site_url()).'" url="'.get_site_url().'" title="'.$options['ivc_text_field_1'].'" subtitle="'.$options['ivc_text_field_2'].'" version="1" mm_icon_focus_hd="'.$options['ivc_image_field_0'].'"
-				mm_icon_focus_sd="'.$options['ivc_image_field_0'].'"
-				mm_icon_side_hd="'.$options['ivc_image_field_1'].'"
-				mm_icon_side_sd="'.$options['ivc_image_field_1'].'"
+			<b>STEP 3</b> : 	<span id="roku_app" fname="'.hash('ripemd160', get_site_url()).'" url="'.get_site_url().'" title="'.$text_field_1.'" subtitle="'.$text_field_2.'" version="1" mm_icon_focus_hd="'.$image_field_0.'"
+				mm_icon_focus_sd="'.$image_field_0.'"
+				mm_icon_side_hd="'.$image_field_1.'"
+				mm_icon_side_sd="'.$image_field_1.'"
 
 				>Download your ROKU app by clicking here  (Watch out for your popup blocker)</span>.
 				<br />
 				<br />
-				<b>STEP 4</b> : 	<span id="tvos_app" fname="'.hash('ripemd160', get_site_url()).'" url="'.get_site_url().'" title="'.$options['ivc_text_field_1'].'" subtitle="'.$options['ivc_text_field_2'].'" version="1" mm_icon_focus_hd="'.$options['ivc_image_field_0'].'"
-					mm_icon_focus_sd="'.$options['ivc_image_field_0'].'"
-					mm_icon_side_hd="'.$options['ivc_image_field_1'].'"
-					mm_icon_side_sd="'.$options['ivc_image_field_1'].'"
+				<b>STEP 4</b> : 	<span id="tvos_app" fname="'.hash('ripemd160', get_site_url()).'" url="'.get_site_url().'" title="'.$text_field_1.'" subtitle="'.$text_field_2.'" version="1" mm_icon_focus_hd="'.$image_field_0.'"
+					mm_icon_focus_sd="'.$image_field_0.'"
+					mm_icon_side_hd="'.$image_field_1.'"
+					mm_icon_side_sd="'.$image_field_1.'"
 					>Download your TVOS app by clicking here  (Watch out for your popup blocker)</span>.
 					<br />
 					<br />
