@@ -3,7 +3,7 @@
 Plugin Name: Ielko Media Manager
 Plugin URI: https://github.com/upggr/ielko-media-manager/releases/latest
 Description: Media manager for Roku, tvOS, iOS, android, windows, ionic, osx clients
-Version: 0.3.3
+Version: 0.3.4
 Author: Ioannis Kokkinis
 Author URI: http://ielko.com
 License: Commercial
@@ -1620,7 +1620,7 @@ function ivc_text_field_1_render()
     $options = is_array($options) ? $options : array();
     if (isset($options['ivc_text_field_1'])) {
         ?>
-	<input type='text' name='ivc_settings[ivc_text_field_1]' value='<?php echo $options['ivc_text_field_1']; ?>' style='width:50%'>
+	<input type='text' name='ivc_settings[ivc_text_field_1]' value='<?php echo esc_attr($options['ivc_text_field_1']); ?>' style='width:50%'>
 	<?php
     } else {
         ?>
@@ -1636,7 +1636,7 @@ function ivc_text_field_2_render()
     $options = is_array($options) ? $options : array();
     if (isset($options['ivc_text_field_2'])) {
         ?>
-	<input type='text' name='ivc_settings[ivc_text_field_2]' value='<?php echo $options['ivc_text_field_2']; ?>' style='width:50%'>
+	<input type='text' name='ivc_settings[ivc_text_field_2]' value='<?php echo esc_attr($options['ivc_text_field_2']); ?>' style='width:50%'>
 	<?php
     } else {
         ?>

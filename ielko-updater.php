@@ -63,6 +63,12 @@ class IelkoUpdater
         // Get plugin & GitHub release information
         $this->initPluginData();
         $this->getRepoReleaseInfo();
+
+        // Check if we have valid GitHub API result
+        if (empty($this->githubAPIResult) || !isset($this->githubAPIResult->tag_name)) {
+            return $transient;
+        }
+
         // Check the versions if we need to do an update
         $doUpdate = version_compare($this->githubAPIResult->tag_name, $transient->checked[$this->slug]);
 
@@ -92,19 +98,25 @@ class IelkoUpdater
         // Get plugin & GitHub release information
         $this->initPluginData();
         $this->getRepoReleaseInfo();
+
+        // Check if we have valid GitHub API result
+        if (empty($this->githubAPIResult)) {
+            return false;
+        }
+
         if (empty($response->slug) || $response->slug != $this->slug) {
             return false;
         }
         // Add our plugin information
-        $response->last_updated = $this->githubAPIResult->published_at;
+        $response->last_updated = isset($this->githubAPIResult->published_at) ? $this->githubAPIResult->published_at : '';
         $response->slug = $this->slug;
-        $response->plugin_name  = $this->pluginData["Name"];
-        $response->version = $this->githubAPIResult->tag_name;
-        $response->author = $this->pluginData["AuthorName"];
-        $response->homepage = $this->pluginData["PluginURI"];
+        $response->plugin_name  = isset($this->pluginData["Name"]) ? $this->pluginData["Name"] : '';
+        $response->version = isset($this->githubAPIResult->tag_name) ? $this->githubAPIResult->tag_name : '';
+        $response->author = isset($this->pluginData["AuthorName"]) ? $this->pluginData["AuthorName"] : '';
+        $response->homepage = isset($this->pluginData["PluginURI"]) ? $this->pluginData["PluginURI"] : '';
 
         // This is our release download zip file
-        $downloadLink = $this->githubAPIResult->zipball_url;
+        $downloadLink = isset($this->githubAPIResult->zipball_url) ? $this->githubAPIResult->zipball_url : '';
 
         // Include the access token for private GitHub repos
         if (!empty($this->accessToken)) {
@@ -119,30 +131,34 @@ class IelkoUpdater
 
         // Create tabs in the lightbox
         $response->sections = array(
-    'description' => $this->pluginData["Description"],
+    'description' => isset($this->pluginData["Description"]) ? $this->pluginData["Description"] : '',
     'changelog' => class_exists("Parsedown")
-        ? Parsedown::instance()->parse($this->githubAPIResult->body)
-        : $this->githubAPIResult->body
+        ? Parsedown::instance()->parse(isset($this->githubAPIResult->body) ? $this->githubAPIResult->body : '')
+        : (isset($this->githubAPIResult->body) ? $this->githubAPIResult->body : '')
 );
 
         // Gets the required version of WP if available
         $matches = null;
-        preg_match("/requires:\s([\d\.]+)/i", $this->githubAPIResult->body, $matches);
-        if (! empty($matches)) {
-            if (is_array($matches)) {
-                if (count($matches) > 1) {
-                    $response->requires = $matches[1];
+        if (isset($this->githubAPIResult->body)) {
+            preg_match("/requires:\s([\d\.]+)/i", $this->githubAPIResult->body, $matches);
+            if (! empty($matches)) {
+                if (is_array($matches)) {
+                    if (count($matches) > 1) {
+                        $response->requires = $matches[1];
+                    }
                 }
             }
         }
 
         // Gets the tested version of WP if available
         $matches = null;
-        preg_match("/tested:\s([\d\.]+)/i", $this->githubAPIResult->body, $matches);
-        if (! empty($matches)) {
-            if (is_array($matches)) {
-                if (count($matches) > 1) {
-                    $response->tested = $matches[1];
+        if (isset($this->githubAPIResult->body)) {
+            preg_match("/tested:\s([\d\.]+)/i", $this->githubAPIResult->body, $matches);
+            if (! empty($matches)) {
+                if (is_array($matches)) {
+                    if (count($matches) > 1) {
+                        $response->tested = $matches[1];
+                    }
                 }
             }
         }
